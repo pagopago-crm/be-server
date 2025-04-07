@@ -1,0 +1,20 @@
+api:
+  github:
+    auth-token: ${GIT_AUTH_TOKEN}
+    host: 'https://api.github.com'
+  claude:
+    api-key: ${CLAUDE_API_KEY}
+    host: 'https://api.anthropic.com/v1/messages'
+    model: 'claude-3-7-sonnet-20250219'
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          reactive:
+            function:
+              client: DEBUG
+    reactor:
+      netty:
+        http:
+          client: DEBUG
