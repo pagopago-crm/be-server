@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.crm.docs.core.TestCaseDocService;
-import com.crm.docs.dto.res.GithubBranchRes;
 import com.crm.docs.dto.res.claude.ClaudeRes;
 
 import lombok.RequiredArgsConstructor;

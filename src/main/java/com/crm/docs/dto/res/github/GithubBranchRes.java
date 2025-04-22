@@ -1,4 +1,4 @@
-package com.crm.docs.dto.res;
+package com.crm.docs.dto.res.github;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

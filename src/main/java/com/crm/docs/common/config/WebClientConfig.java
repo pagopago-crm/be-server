@@ -74,8 +74,8 @@ public class WebClientConfig {
 	private ReactorClientHttpConnector createConnector() {
 		return new ReactorClientHttpConnector(
 			HttpClient.create()
-				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 800000) //연결타임아웃 80초 설정(클로드 연결 타임아웃 해결을 위해.)
-				.responseTimeout(Duration.ofSeconds(60))
+				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 8000000) //연결타임아웃 80초 설정(클로드 연결 타임아웃 해결을 위해.)
+				.responseTimeout(Duration.ofSeconds(600))
 				.wiretap(true)
 				.secure(sslContextSpec ->{
 					try {

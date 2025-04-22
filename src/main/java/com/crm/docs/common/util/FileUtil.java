@@ -36,4 +36,15 @@ public final class FileUtil {
 
 		return resultMimeType;
 	}
+
+	//베이스 url이 붙으면 제거
+	public static String removeGithubUrl(String url){
+		String baseUrl = "https://api.github.com";
+
+		if(url != null && url.startsWith(baseUrl)){
+			return url.substring(baseUrl.length());
+		}
+
+		return url;
+	}
 }
