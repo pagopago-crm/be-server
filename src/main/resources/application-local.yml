@@ -5,7 +5,7 @@ api:
   claude:
     api-key: ${CLAUDE_API_KEY}
     host: 'https://api.anthropic.com/v1/messages'
-    model: 'claude-3-7-sonnet-20250219'
+    model: ${CLAUDE_MODEL:claude-3-7-sonnet-20250219}
 logging:
   level:
     org:
@@ -18,3 +18,29 @@ logging:
       netty:
         http:
           client: DEBUG
+spring:
+  ai:
+    anthropic:
+      api-key: ${CLAUDE_API_KEY}
+      chat:
+        options:
+          model: ${CLAUDE_MODEL:claude-3-7-sonnet-20250219}
+          temperature: 0.1 #같은 내용이라면 매번 같은 응답을 반환하도록 낮게 설정.
+          max-tokens: 5000
+    openai: # Embedding 모델
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 1536
+    vectorstore:
+      pgvector:
+        table-name:
+        initialize-schema: false
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1536 #vector디비와 값을 맞춰야 함.
+  datasource:
+    url: jdbc:postgresql://localhost:5432/application_analysis_rag
+    username: postgres
+    password:

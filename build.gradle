@@ -47,6 +47,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.107.Final:osx-aarch_64'
+
+
+	// 이미지 처리
+	implementation 'commons-io:commons-io:2.15.1'
+
+	//spring ai추가
+	implementation 'org.springframework.ai:spring-ai-starter-model-anthropic:1.0.0' //chat용
+	implementation 'org.springframework.ai:spring-ai-starter-vector-store-pgvector:1.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.ai:spring-ai-advisors-vector-store:1.0.0'
+	implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.0' //임베딩용
+	runtimeOnly 'org.postgresql:postgresql'
 }
 
 tasks.named('test') {

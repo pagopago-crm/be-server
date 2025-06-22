@@ -14,4 +14,6 @@ import lombok.Setter;
 public class PromptConfig {
 
 	private String qaTest;
+	private String sourceAnalyze;
+	private String ragQaTest;
 }

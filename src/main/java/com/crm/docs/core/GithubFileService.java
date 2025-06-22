@@ -20,15 +20,14 @@ import org.springframework.stereotype.Service;
 
 import com.crm.docs.common.config.PromptConfig;
 import com.crm.docs.common.util.FileUtil;
+import com.crm.docs.dto.github.SourceCodeInfoDto;
 import com.crm.docs.dto.req.claude.ClaudeApiRequest;
 import com.crm.docs.dto.req.claude.ClaudeContentItem;
 import com.crm.docs.dto.req.claude.ClaudeMessage;
 import com.crm.docs.dto.req.claude.ClaudeTextContent;
 import com.crm.docs.dto.res.claude.ClaudeRes;
-import com.crm.docs.dto.res.github.GithubBranchRes;
 import com.crm.docs.dto.res.github.GithubContentDto;
 import com.crm.docs.dto.res.github.tag.GithubTagRes;
-import com.crm.docs.dto.res.github.tag.compare.GithubCompareFileDto;
 import com.crm.docs.dto.res.github.tag.compare.GithubCompareRes;
 import com.crm.docs.infra.ClaudeClient;
 import com.crm.docs.infra.GithubClient;
@@ -62,7 +61,46 @@ public class GithubFileService {
 	}
 
 	/**
-	 * 이전 태그와 비교해서 변경된 파일 가져오기
+	 * 이전 태그와 비교해서 변경된 소스 파일만 가져오기
+	 */
+	public List<SourceCodeInfoDto> getGithubChangeSource(String owner, String repo, String selectTags){
+		//1. 모든 태그정보 가져오기.
+		List<GithubTagRes> tags = githubClient.getRepoTags(owner, repo).block();
+
+		//TODO : api 테스트 결과 태그가 하나일때 ^ 해당 기호를 붙이는 방식으로는 파일이 없는 걸로 나와서 해결필요.
+		//2. 대상 태그 찾기.
+		String baseTag = tags.stream()
+			.filter(tag -> !tag.getName().equals(selectTags))
+			.findFirst()
+			.map(GithubTagRes::getName)//이전 태그가 있으면 반환.
+			.orElse(selectTags + "^"); //이전태그가 없으면 최초 생성된 태그로 자기 자신과 비교.
+
+		log.info("test =>>> {}",baseTag);
+		//3. 선택한 태그와 추출한 태그로 변경된 파일조회
+		GithubCompareRes githubCompareRes = githubClient.getRepoCompare(owner, repo, baseTag, selectTags).block();
+
+		//4. 추출한 정보로 파일정보 가져오기
+		List<GithubContentDto> githubBranchResList = githubCompareRes.getFiles().stream()
+			.filter(file -> file.getContentsUrl() != null) //컨텐츠 url이 없으면 패스.
+			.map(file -> {
+				String remakeUrl = FileUtil.removeGithubUrl(file.getContentsUrl());
+				return githubClient.getContentApi(remakeUrl).block();
+			})
+			.toList();
+
+		//5. 줄바꿈 문자 제거 및 필요데이터만 추출.
+		return githubBranchResList.stream()
+			.map(item -> {
+				item.removeContentSpace();
+				return item;
+			})
+			.map(SourceCodeInfoDto::of)
+			.toList();
+	}
+
+
+	/**
+	 * 이전 태그와 비교해서 변경된 파일로 분석 요청
 	 */
 	public ClaudeRes getChangeFilellm(String owner, String repo, String selectTags){
 		//1. 모든 태그정보 가져오기.

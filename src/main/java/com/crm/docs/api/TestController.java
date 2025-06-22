@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.crm.docs.core.GithubFileService;
+import com.crm.docs.core.analysis.CodeAnalyze;
+import com.crm.docs.dto.github.SourceCodeInfoDto;
 import com.crm.docs.dto.res.claude.ClaudeRes;
+import com.crm.docs.dto.res.github.GithubContentDto;
 import com.crm.docs.dto.res.github.tag.GithubTagRes;
 import com.crm.docs.dto.res.github.tag.compare.GithubCompareRes;
 
@@ -21,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TestController {
 
 	private final GithubFileService githubFileService;
+	private final CodeAnalyze codeAnalyze;
 
 	@GetMapping("test1")
 	public List<GithubTagRes> test1(
@@ -47,5 +51,26 @@ public class TestController {
 		@RequestParam(name = "selectTag") String selectTag
 	){
 		return githubFileService.getChangeFilellm(owner, repo, selectTag);
+	}
+
+	@GetMapping("test4")
+	public List<SourceCodeInfoDto> test4(
+		@RequestParam(name = "owner") String owner,
+		@RequestParam(name = "repo") String repo,
+		@RequestParam(name = "selectTag") String selectTag
+	){
+
+		return githubFileService.getGithubChangeSource(owner, repo, selectTag);
+
+	}
+
+	@GetMapping("test5")
+	public String test5(
+		@RequestParam(name = "owner") String owner,
+		@RequestParam(name = "repo") String repo,
+		@RequestParam(name = "selectTag") String selectTag
+	){
+
+		return codeAnalyze.analyzeSourceCode(owner, repo, selectTag);
 	}
 }
