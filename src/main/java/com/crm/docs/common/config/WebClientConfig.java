@@ -15,6 +15,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
+import io.netty.resolver.DefaultAddressResolverGroup;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import reactor.netty.http.HttpProtocol;
@@ -87,7 +90,7 @@ public class WebClientConfig {
 					} catch (SSLException e) {
 						throw new RuntimeException(e);
 					}
-				})
+				}).resolver(DefaultAddressResolverGroup.INSTANCE)
 		);
 
 	}

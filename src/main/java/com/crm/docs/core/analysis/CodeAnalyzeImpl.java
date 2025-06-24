@@ -106,7 +106,7 @@ public class CodeAnalyzeImpl implements CodeAnalyze {
 			sourceCodeAnalyzeData,
 			"test_rag",
 			5,
-			0.5
+			0.4
 		);
 
 
