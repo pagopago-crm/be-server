@@ -80,7 +80,7 @@ curl "http://localhost:8080/test5?owner=mycompany&repo=myproject&selectTag=v1.2.
 
 ### 처리 흐름 다이어그램
 
-<img width="1525" alt="Image" src="https://github.com/user-attachments/assets/32af4835-7bd4-4a74-bb30-14101a384c6a" />
+<img width="872" alt="Image" src="https://github.com/user-attachments/assets/5eb0b3ce-15dc-46c6-8307-a91c42d03e0d" />
 
 ### 주요 컴포넌트
 
