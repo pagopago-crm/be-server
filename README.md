@@ -76,11 +76,16 @@ curl "http://localhost:8080/test5?owner=mycompany&repo=myproject&selectTag=v1.2.
 }
 ```
 
-## 🔄 시스템 아키텍처
+## 🔄 아키텍처
 
 ### 처리 흐름 다이어그램
 
 <img width="872" alt="Image" src="https://github.com/user-attachments/assets/5eb0b3ce-15dc-46c6-8307-a91c42d03e0d" />
+
+
+### 시스템 아키텍처
+
+![Image](https://github.com/user-attachments/assets/e30f0427-3e1c-4913-b95e-aa4d21dbc71a)
 
 ### 주요 컴포넌트
 
