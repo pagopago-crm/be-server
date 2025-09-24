@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "mobile-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mobilenext/mobile-mcp@latest"
+      ],
+      "env": {
+        "ANDROID_HOME": "/Users/isanghyeon/Library/Android/sdk",
+        "PATH": "/usr/local/bin:/usr/bin:/bin:/Users/isanghyeon/Library/Android/sdk/platform-tools"
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ package com.crm.docs.api;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,7 @@ public class TestController {
 		@RequestParam(name = "repo") String repo
 	){
 		return githubFileService.getRepoTagsTest(owner, repo);
+
 	}
 	@GetMapping("test2")
 	public GithubCompareRes test2(
