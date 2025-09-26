@@ -8,8 +8,7 @@ RUN apk add --no-cache wget unzip bash \
     && unzip platform-tools-latest-linux.zip \
     && mv platform-tools/adb /usr/local/bin/ \
     && chmod +x /usr/local/bin/adb \
-    && rm -rf /tmp/platform-tools* \
-    && rm platform-tools-latest-linux.zip
+    && rm -rf /tmp/*
 
 WORKDIR /app
 
