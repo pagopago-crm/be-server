@@ -66,6 +66,9 @@ public class TestController {
 
 	}
 
+	/*rag 호출해서 테스트 진행하는 api
+	* createRagPromptData 메서드가 rag에서 유사도 측정하여 관련데이터 가져오는 부분.
+	* */
 	@GetMapping("test5")
 	public String test5(
 		@RequestParam(name = "owner") String owner,
