@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-jre-alpine
 LABEL authors="lsh80165@gmail.com"
 
 # ADB만 설치 (최소한의 패키지)
-RUN apk add --no-cache wget unzip bash \
+RUN apk add --no-cache wget unzip bash nodejs npm \
     && cd /tmp \
     && wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip \
     && unzip platform-tools-latest-linux.zip \
