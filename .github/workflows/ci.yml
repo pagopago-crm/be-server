@@ -11,9 +11,11 @@ permissions: write-all
 env:
   DOCKER_IMAGE: sh80165/app_automation
   # DOCKER_IMAGE_VERSION: ${{ GITHUB_SHA }}
+  MANIFEST_REPO: pagopago-crm/doc-manifest
+  MANIFEST_FILE_PATH: backend/deployment.yaml
 
 jobs:
-  build:
+  build-push:
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.docker-version.outputs.NEW_TAG }}
@@ -64,3 +66,27 @@ jobs:
       - name: Push docker image to docker hub
         run: docker push "${{ env.DOCKER_IMAGE }}:${{ steps.docker-version.outputs.NEW_TAG }}"
 
+  update-deployment:
+    needs: build-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update private deployment repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MANIFEST_REPO }}  # 실제 private CD 레포 이름으로 변경
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}  # private repo 접근용
+          path: deployment
+
+      - name: Update image tag with Kustomize
+        run: |
+          cd deployment
+
+          # sed로 이미지 태그 업데이트
+          sed -i "s|${{ env.DOCKER_IMAGE }}:.*|${{ env.DOCKER_IMAGE }}:${{ needs.build-push.outputs.new_tag }}|g" ${{ env.MANIFEST_FILE_PATH }}
+
+          git config user.name "lsh9672"
+          git config user.email "lsh80165@gmail.com"
+          git add .
+          git commit -m "Feat : Update text-to-sql image to ${{ github.sha }}"
+          git push origin main
