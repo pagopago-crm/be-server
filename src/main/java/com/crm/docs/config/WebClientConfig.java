@@ -1,4 +1,4 @@
-package com.crm.docs.common.config;
+package com.crm.docs.config;
 
 import java.time.Duration;
 

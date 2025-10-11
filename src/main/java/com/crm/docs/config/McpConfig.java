@@ -1,4 +1,4 @@
-package com.crm.docs.common.config;
+package com.crm.docs.config;
 
 import java.util.Collections;
 import java.util.List;

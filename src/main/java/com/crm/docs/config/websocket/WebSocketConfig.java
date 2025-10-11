@@ -1,4 +1,4 @@
-package com.crm.docs.common.config.websocket;
+package com.crm.docs.config.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(vncProxyHandler, "/websockify").setAllowedOrigins("*");
+		registry.addHandler(vncProxyHandler, "/websockify/{osTp}/{deviceType}/{osVersion}").setAllowedOrigins("*");
 
 	}
 
