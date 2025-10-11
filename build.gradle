@@ -71,6 +71,10 @@ dependencies {
 	implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.0' //임베딩용
 	runtimeOnly 'org.postgresql:postgresql'
 
+	//웹 소켓 - 앱 컨테이너 접속용.
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.eclipse.jetty.websocket:websocket-jetty-client:11.0.15'
+
 	//모니터링 및 health 체크를 위한 actuator
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 

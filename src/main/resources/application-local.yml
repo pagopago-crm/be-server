@@ -8,6 +8,7 @@ api:
     model: ${CLAUDE_MODEL:claude-sonnet-4-20250514}
 logging:
   level:
+    com.crm.docs.common.config.websocket: DEBUG
     org:
       springframework:
         web:
