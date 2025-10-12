@@ -21,4 +21,19 @@ public class GithubContentDto {
 	public void removeContentSpace(){
 		this.content = this.content.replaceAll("\\s+", "");
 	}
+
+	@Override
+	public String toString() {
+		return "GithubContentDto{" +
+			"content='" + content + '\'' +
+			", type='" + type + '\'' +
+			", encoding='" + encoding + '\'' +
+			", size=" + size +
+			", name='" + name + '\'' +
+			", path='" + path + '\'' +
+			", sha='" + sha + '\'' +
+			", url='" + url + '\'' +
+			", downloadUrl='" + downloadUrl + '\'' +
+			'}';
+	}
 }

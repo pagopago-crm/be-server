@@ -28,4 +28,13 @@ public class SourceCodeInfoDto {
 			.content(githubContentDto.getContent())
 			.build();
 	}
+
+	@Override
+	public String toString() {
+		return "SourceCodeInfoDto{" +
+			"content='" + content + '\'' +
+			", fileName='" + fileName + '\'' +
+			", encoding='" + encoding + '\'' +
+			'}';
+	}
 }

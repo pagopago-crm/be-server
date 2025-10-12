@@ -14,7 +14,23 @@ public class GithubCompareFileDto {
 	private String deletions;
 	private String changes;
 	private String blobUrl;
-	private String rowUrl;
+	private String rawUrl;
 	private String contentsUrl;
 	private String patch;
+
+	@Override
+	public String toString() {
+		return "GithubCompareFileDto{" +
+			"additions='" + additions + '\'' +
+			", sha='" + sha + '\'' +
+			", filename='" + filename + '\'' +
+			", status='" + status + '\'' +
+			", deletions='" + deletions + '\'' +
+			", changes='" + changes + '\'' +
+			", blobUrl='" + blobUrl + '\'' +
+			", rowUrl='" + rawUrl + '\'' +
+			", contentsUrl='" + contentsUrl + '\'' +
+			", patch='" + patch + '\'' +
+			'}';
+	}
 }

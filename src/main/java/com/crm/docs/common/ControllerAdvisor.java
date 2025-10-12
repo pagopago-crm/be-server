@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @RequiredArgsConstructor
-@RestControllerAdvice
+// @RestControllerAdvice
 public class ControllerAdvisor {
 
 	private final ResponseService responseService;

@@ -16,7 +16,7 @@ public class DeviceServiceMapper {
 	@PostConstruct
 	public void initialize() {
 		// Android devices - Galaxy S23
-		DEVICE_TO_SERVICE.put("android:galaxy_s23:11", "android-s23-v11-svc");
+		DEVICE_TO_SERVICE.put("android:galaxy_s23:11", "android-emulator-service");
 		DEVICE_TO_SERVICE.put("android:galaxy_s23:12", "android-s23-v12-svc");
 		DEVICE_TO_SERVICE.put("android:galaxy_s23:13", "android-s23-v13-svc");
 		DEVICE_TO_SERVICE.put("android:galaxy_s23:14", "android-s23-v14-svc");

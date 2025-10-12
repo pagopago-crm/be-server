@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.client.JettyClientHttpRequestFactory;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -40,12 +43,38 @@ public class WebClientConfig {
 	@Value("${api.claude.api-key}")
 	private String claudeApiKey;
 
+	// Spring AI 전용 WebClient.Builder (Primary로 지정)
+	@Bean
+	@Primary
+	public RestClient.Builder restClientBuilder() throws Exception {
+		// Jetty HttpClient 생성 및 타임아웃 설정
+		org.eclipse.jetty.client.HttpClient httpClient = new org.eclipse.jetty.client.HttpClient();
+		httpClient.setConnectTimeout(120000); // 2분
+		httpClient.setIdleTimeout(300000); // 5분
+		httpClient.start();
+
+		JettyClientHttpRequestFactory requestFactory = new JettyClientHttpRequestFactory(httpClient);
+		requestFactory.setReadTimeout(Duration.ofMinutes(5));
+
+		return RestClient.builder()
+			.requestFactory(requestFactory);
+	}
+	// @Bean(name = "springAiWebClientBuilder")
+	// public WebClient.Builder webClientBuilder() {
+	// 	return WebClient.builder()
+	// 		.clientConnector(new ReactorClientHttpConnector(
+	// 			reactor.netty.http.client.HttpClient.create()
+	// 				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 120000)
+	// 				.responseTimeout(Duration.ofMinutes(5))
+	// 		));
+	// }
+
 	@Bean(name = "githubWebClient")
 	public WebClient githubWebClient(WebClient.Builder builder){
 
 		return builder
 			.baseUrl(githubApiHost)
-			.defaultHeader("Authorization", githubAuthToken)
+			.defaultHeader("Authorization", "Bearer " + githubAuthToken)
 			.defaultHeader("Accept", "application/vnd.github+json")
 			.defaultHeader("X-GitHub-Api-Version", "2022-11-28")
 			.exchangeStrategies(getExchangeStrategies())
@@ -54,8 +83,8 @@ public class WebClientConfig {
 	}
 
 	@Bean(name = "claudeWebClient")
-	public WebClient claudeWebClient(WebClient.Builder builder){
-		return builder
+	public WebClient claudeWebClient(){
+		return WebClient.builder()
 			.baseUrl(claudeApiHost)
 			.defaultHeader("x-api-key", claudeApiKey)
 			.defaultHeader("anthropic-version", "2023-06-01")
@@ -64,6 +93,7 @@ public class WebClientConfig {
 			.clientConnector(createConnector())
 			.build();
 	}
+
 
 	//코덱처리를 위한 메모리 크기를 늘려줌.
 	private ExchangeStrategies getExchangeStrategies() {

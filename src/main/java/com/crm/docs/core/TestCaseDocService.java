@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.crm.docs.common.config.PromptConfig;
+import com.crm.docs.config.PromptConfig;
 import com.crm.docs.dto.req.claude.ClaudeApiRequest;
 import com.crm.docs.dto.req.claude.ClaudeContentItem;
 import com.crm.docs.dto.req.claude.ClaudeMessage;

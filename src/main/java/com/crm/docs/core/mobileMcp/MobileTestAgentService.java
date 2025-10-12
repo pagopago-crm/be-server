@@ -1,11 +1,17 @@
 package com.crm.docs.core.mobileMcp;
 
-import org.slf4j.Logger;
 import org.springframework.ai.anthropic.AnthropicChatModel;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.ai.tool.ToolCallback;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.crm.docs.common.response.exception.CustomException;
+import com.crm.docs.common.response.exception.CustomExceptionStatus;
+import com.crm.docs.common.util.DeviceServiceMapper;
+import com.crm.docs.config.PromptConfig;
+import com.crm.docs.dto.req.testcase.TestScenarioExeReq;
 
 import io.modelcontextprotocol.spec.McpError;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +19,20 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+
 public class MobileTestAgentService {
 
 	private final ChatClient chatClient;
+	private final DeviceServiceMapper deviceServiceMapper;
+	private final PromptConfig promptConfig;
+
+	@Value("${spring.profiles.active:local}")
+	private String activeProfile;
 
 	public MobileTestAgentService(AnthropicChatModel chatModel,
-		SyncMcpToolCallbackProvider mcpToolCallbackProvider){
+		SyncMcpToolCallbackProvider mcpToolCallbackProvider,
+		DeviceServiceMapper deviceServiceMapper,
+		PromptConfig promptConfig){
 
 		ToolCallback[] toolCallbacks = mcpToolCallbackProvider.getToolCallbacks();
 
@@ -33,6 +47,9 @@ public class MobileTestAgentService {
 		this.chatClient = ChatClient.builder(chatModel)
 			.defaultToolCallbacks(toolCallbacks)
 			.build();
+
+		this.deviceServiceMapper = deviceServiceMapper;
+		this.promptConfig = promptConfig;
 	}
 
 	//테스트 케이스 전달.
@@ -166,6 +183,68 @@ public class MobileTestAgentService {
 
 			return response;
 
+		}
+		catch (McpError e){
+			if (e.getMessage().contains("Invalid argument")){
+				log.warn("좌표 오류 -> " + e.getMessage());
+			}
+			throw new RuntimeException("mcp 에러 발생.");
+		}
+		catch (Exception e){
+			log.error("Test Execution failed", e);
+			throw new RuntimeException("에러 발생.");
+		}
+	}
+
+
+	//테스트 케이스 전달.
+	public String executeTestScenarioMobile(TestScenarioExeReq scenarioInfo) {
+
+		String virtualAppContainer = "";
+		if ("local".equals(activeProfile)) {
+			virtualAppContainer = "127.0.0.1:5555";
+		}
+		else{
+			// dev 환경: K8s service 이름 사용
+			String serviceName = deviceServiceMapper.getServiceName(
+				scenarioInfo.getOSType(),
+				scenarioInfo.getDeviceType(),
+				scenarioInfo.getOsVersion()
+			);
+
+			if(serviceName == null || serviceName.isEmpty()) throw new CustomException(CustomExceptionStatus.NOT_FOUND_APP_ENV_CONTAINER);
+			virtualAppContainer = String.format("%s:5555", serviceName);
+
+		}
+
+
+
+		String systemPrompt = String.format(
+			promptConfig.getMcpSystemPrompt(),
+			virtualAppContainer
+		);
+
+		String userPrompt = String.format(
+			promptConfig.getMcpUserPrompt(),
+			virtualAppContainer,
+			scenarioInfo.getScenario()
+		);
+
+		log.info("mcp_system_prompt => {}", systemPrompt);
+		log.info("mcp_user_prompt => {}", userPrompt);
+
+
+		try {
+			String response = chatClient
+				.prompt()
+				.system(systemPrompt)
+				.user(userPrompt)
+				.call()
+				.content();
+
+			log.info("[llm 응답내용] - {}", response);
+
+			return response;
 		}
 		catch (McpError e){
 			if (e.getMessage().contains("Invalid argument")){

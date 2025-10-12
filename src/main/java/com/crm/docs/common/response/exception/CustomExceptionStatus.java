@@ -17,7 +17,7 @@ public enum CustomExceptionStatus implements CustomStatus {
 
 	NOT_FOUND_USER(ResponseStatus.FAIL, "4004","해당하는 유저가 없습니다."),
 	NOT_FOUND_REPOSITORY(ResponseStatus.FAIL, "4005","레포지토리 정보를 확인해주세요."),
-
+	NOT_FOUND_APP_ENV_CONTAINER(ResponseStatus.FAIL, "4006","해당 앱 환경 컨테이너를 찾을 수 없습니다.")
 	;
 	private final ResponseStatus status;
 	private final String code;

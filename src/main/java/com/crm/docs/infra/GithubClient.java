@@ -80,4 +80,18 @@ public class GithubClient {
 			.bodyToMono(GithubContentDto.class);
 
 	}
+
+	/**
+	 * 레포 존재유무 확인.
+	 */
+	public Mono<Boolean> checkRepo(String owner, String repo){
+
+		return webClient.get()
+			.uri("/repos/{owner}/{repo}", owner, repo)
+			.retrieve()
+			.toBodilessEntity()
+			.map(response -> true)
+			.onErrorResume(error -> Mono.just(false));
+
+	}
 }

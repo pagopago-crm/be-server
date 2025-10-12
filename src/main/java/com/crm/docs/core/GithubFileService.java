@@ -12,13 +12,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.crm.docs.common.config.PromptConfig;
+import com.crm.docs.config.PromptConfig;
 import com.crm.docs.common.util.FileUtil;
 import com.crm.docs.dto.github.SourceCodeInfoDto;
 import com.crm.docs.dto.req.claude.ClaudeApiRequest;
@@ -75,9 +74,9 @@ public class GithubFileService {
 			.map(GithubTagRes::getName)//이전 태그가 있으면 반환.
 			.orElse(selectTags + "^"); //이전태그가 없으면 최초 생성된 태그로 자기 자신과 비교.
 
-		log.info("test =>>> {}",baseTag);
 		//3. 선택한 태그와 추출한 태그로 변경된 파일조회
 		GithubCompareRes githubCompareRes = githubClient.getRepoCompare(owner, repo, baseTag, selectTags).block();
+
 
 		//4. 추출한 정보로 파일정보 가져오기
 		List<GithubContentDto> githubBranchResList = githubCompareRes.getFiles().stream()
