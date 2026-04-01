@@ -43,9 +43,9 @@ spring:
       api-key: ${CLAUDE_API_KEY}
       chat:
         options:
-          model: ${CLAUDE_MODEL:claude-sonnet-4-20250514}
-          temperature: 0.2 #같은 내용이라면 매번 같은 응답을 반환하도록 낮게 설정.
-          max-tokens: 10000 #토큰 사용량 줄이기
+          model: ${CLAUDE_MODEL:claude-sonnet-4-5-20250929}
+          temperature: 0.1 #같은 내용이라면 매번 같은 응답을 반환하도록 낮게 설정.
+          max-tokens: 20000 #토큰 사용량 줄이기
 #    mcp:
 #      client:
 #        sse:

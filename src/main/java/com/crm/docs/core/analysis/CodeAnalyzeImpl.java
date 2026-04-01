@@ -57,7 +57,6 @@ public class CodeAnalyzeImpl implements CodeAnalyze {
 		//예외 처리 -> 해당 레포가 없는 경우.
 		githubRepoCheckService.repoExists(owner, repo);
 
-		System.out.println("test111===> ");
 
 		//1. 변경된 소스코드정보 가져오기(base64형식.)
 		List<SourceCodeInfoDto> githubChangeSources = githubFileService.getGithubChangeSource(owner, repo, selectTags);
@@ -65,12 +64,10 @@ public class CodeAnalyzeImpl implements CodeAnalyze {
 		//2. 프롬프트 생성.
 		String sourceCodeAnalyzeContext = createSourceCodeAnalyzeContext(githubChangeSources); //소스코드 컨텍스트
 		Prompt prompt = createSourceCodeAnalyzePrompt(sourceCodeAnalyzeContext); //컨텍스트 기반 프롬프트.
-		log.info("prompt check => {}", prompt);
 
 		//3. 소스코드 설명 요청.
 		ChatResponse response = chatModel.call(prompt);
 		String responseData = response.getResult().getOutput().getText();
-		log.info("source response => {}", response.toString());
 
 		//4. rag에서 참고자료 조회 해서 테스트 케이스 생성을 위한 프롬프트 생성
 		Prompt ragTestCasePrompt = createRagPromptData(responseData, sourceCodeAnalyzeContext);
@@ -131,8 +128,6 @@ public class CodeAnalyzeImpl implements CodeAnalyze {
 		String content = testScenarioResponse.getResult().getOutput().getText().replaceAll("```json\\s*", "").replaceAll("```\\s*", "").trim();
 
 
-		log.info("content1213124 => {}", content);
-
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode jsonArray = mapper.readTree(content);
 
@@ -141,7 +136,6 @@ public class CodeAnalyzeImpl implements CodeAnalyze {
 			scenarioJsonList.add(node.toString());
 		}
 
-		log.info("jsonCheck123423 => {}", scenarioJsonList);
 		//TODO : 영상촬영시에는 잘되는 케이스로 찍기 위해, 해당 mock 로직 사용 - 추후 제거.
 		return createMockScenarios();
 		// return scenarioJsonList.stream()
@@ -244,12 +238,12 @@ public class CodeAnalyzeImpl implements CodeAnalyze {
 					"5. 로그인시도",
 					"6. 로그인이 성공하면 yplay 화면으로 이동."
 						+ "(Y출석체크 팝업이 뜨면, 클로버 사용하기를 누름)",
-					"7. 메인에 보이는 아무 이미지 배너를 클릭해서 조회."
+					"7. y소식 배너를 찾아서 클릭."
 						+ "(이미지를 좌우, 상하로 스크롤 해보면서 찾기.)",
-					"8. 정상적으로 조회되는 것 확인."
+					"8. 스크롤을 끝까지 내려보고, 하단의  바로가기 또는 이벤트 자세히보기 영역을 눌러서 외부 링크로 랜딩되는 것 확인."
 
 				))
-				.expectedResult("메인 화면으로 이동하고 사용자 프로필이 상단에 표시된다")
+				.expectedResult("y소식에 등록된 외부 링크로 랜딩이 된다.")
 			.build()
 		);
 

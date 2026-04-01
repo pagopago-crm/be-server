@@ -230,10 +230,6 @@ public class MobileTestAgentService {
 			scenarioInfo.getScenario()
 		);
 
-		log.info("mcp_system_prompt => {}", systemPrompt);
-		log.info("mcp_user_prompt => {}", userPrompt);
-
-
 		try {
 			String response = chatClient
 				.prompt()
@@ -242,7 +238,7 @@ public class MobileTestAgentService {
 				.call()
 				.content();
 
-			log.info("[llm 응답내용] - {}", response);
+			// log.info("[llm 응답내용] - {}", response);
 
 			return response;
 		}
@@ -257,5 +253,4 @@ public class MobileTestAgentService {
 			throw new RuntimeException("에러 발생.");
 		}
 	}
-
 }
